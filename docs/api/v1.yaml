@@ -1,0 +1,182 @@
+openapi: 3.1.0
+info:
+  title: get-installer-admin API
+  version: 1.0.0
+  description: |
+    REST API surface for `get-installer-admin`. All endpoints are
+    tenant-scoped via the bearer token + the `TenantScope` middleware.
+
+    **Authentication**: Bearer token issued by Laravel Passport.
+    Browser admin sessions use the same token, set as an httpOnly
+    cookie by the Inertia SPA bootstrap.
+
+    **Versioning**: this is `/api/v1`. Breaking changes go in `/api/v2`.
+
+servers:
+  - url: https://{tenant}.admin.example.com/api/v1
+    variables:
+      tenant:
+        default: acme
+        description: tenant subdomain or "app" for path-routed deployments
+
+security:
+  - bearerAuth: []
+
+paths:
+  /tenants/me:
+    get:
+      summary: Return the authenticated tenant.
+      responses:
+        '200': { $ref: '#/components/responses/Tenant' }
+
+  /registries:
+    get:
+      summary: List registries owned by the current tenant.
+      responses:
+        '200':
+          description: Paginated registries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRegistries'
+    post:
+      summary: Create a registry.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegistryWrite' }
+      responses:
+        '201': { $ref: '#/components/responses/Registry' }
+
+  /registries/{id}:
+    get:
+      summary: Read a registry.
+      parameters: [ { $ref: '#/components/parameters/RegistryId' } ]
+      responses:
+        '200': { $ref: '#/components/responses/Registry' }
+    patch:
+      summary: Update a registry (creates an audit log entry).
+      parameters: [ { $ref: '#/components/parameters/RegistryId' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegistryWrite' }
+      responses:
+        '200': { $ref: '#/components/responses/Registry' }
+
+  /audit:
+    get:
+      summary: List audit log entries for the current tenant.
+      parameters:
+        - { name: limit, in: query, schema: { type: integer, default: 100 } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: Paginated audit entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAudit'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    RegistryId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  schemas:
+    Tenant:
+      type: object
+      required: [id, slug, name, created_at]
+      properties:
+        id:         { type: string, format: uuid }
+        slug:       { type: string }
+        name:       { type: string }
+        created_at: { type: string, format: date-time }
+
+    RegistryWrite:
+      type: object
+      required: [name, body]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+        body:
+          description: |
+            The full registry.json payload. Validated against
+            `simtabi/get-installer/schemas/registry.schema.json`
+            before write.
+          type: object
+          additionalProperties: true
+
+    Registry:
+      allOf:
+        - $ref: '#/components/schemas/RegistryWrite'
+        - type: object
+          required: [id, tenant_id, schema_version, created_at, updated_at]
+          properties:
+            id:             { type: string, format: uuid }
+            tenant_id:      { type: string, format: uuid }
+            schema_version: { type: integer }
+            created_at:     { type: string, format: date-time }
+            updated_at:     { type: string, format: date-time }
+
+    AuditEntry:
+      type: object
+      required: [id, action, target_type, target_id, actor, created_at]
+      properties:
+        id:          { type: string, format: uuid }
+        action:      { type: string, enum: [create, update, delete] }
+        target_type: { type: string }
+        target_id:   { type: string, format: uuid }
+        actor:
+          type: object
+          required: [user_id, email]
+          properties:
+            user_id: { type: string, format: uuid }
+            email:   { type: string, format: email }
+        before:      { type: object, additionalProperties: true }
+        after:       { type: object, additionalProperties: true }
+        created_at:  { type: string, format: date-time }
+
+    PaginatedRegistries:
+      type: object
+      required: [data, next_cursor]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Registry' }
+        next_cursor:
+          type: string
+          nullable: true
+
+    PaginatedAudit:
+      type: object
+      required: [data, next_cursor]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/AuditEntry' }
+        next_cursor:
+          type: string
+          nullable: true
+
+  responses:
+    Tenant:
+      description: One Tenant.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Tenant' }
+    Registry:
+      description: One Registry.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Registry' }

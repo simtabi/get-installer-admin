@@ -1,0 +1,99 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    name: php ${{ matrix.php }} · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        php: ["8.3", "8.4"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Skip if bootstrap not run
+        id: precheck
+        run: |
+          if [ ! -f composer.json ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::composer.json not present yet — see INITIALIZE.md"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup PHP
+        if: steps.precheck.outputs.skip == 'false'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, ctype, json, pdo, sqlite, pdo_sqlite, intl
+          coverage: none
+
+      - name: Install
+        if: steps.precheck.outputs.skip == 'false'
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Pint (lint)
+        if: steps.precheck.outputs.skip == 'false'
+        run: ./vendor/bin/pint --test
+
+      - name: PHPStan (types)
+        if: steps.precheck.outputs.skip == 'false'
+        run: ./vendor/bin/phpstan analyse --no-progress
+
+      - name: Pest (tests)
+        if: steps.precheck.outputs.skip == 'false'
+        run: ./vendor/bin/pest
+
+  node:
+    name: node 22 · assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Skip if bootstrap not run
+        id: precheck
+        run: |
+          if [ ! -f package.json ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::package.json not present yet — see INITIALIZE.md"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: pnpm/action-setup@v4
+        if: steps.precheck.outputs.skip == 'false'
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v6
+        if: steps.precheck.outputs.skip == 'false'
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+        if: steps.precheck.outputs.skip == 'false'
+
+      - run: pnpm lint
+        if: steps.precheck.outputs.skip == 'false'
+
+      - run: pnpm typecheck
+        if: steps.precheck.outputs.skip == 'false'
+
+      - run: pnpm test
+        if: steps.precheck.outputs.skip == 'false'
