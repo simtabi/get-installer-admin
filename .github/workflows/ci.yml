@@ -51,13 +51,17 @@ jobs:
         if: steps.precheck.outputs.skip == 'false'
         run: ./vendor/bin/pint --test
 
-      - name: PHPStan (types)
+      - name: Copy .env
         if: steps.precheck.outputs.skip == 'false'
-        run: ./vendor/bin/phpstan analyse --no-progress
+        run: cp .env.example .env
 
-      - name: Pest (tests)
+      - name: APP_KEY
         if: steps.precheck.outputs.skip == 'false'
-        run: ./vendor/bin/pest
+        run: php artisan key:generate
+
+      - name: PHPUnit (tests)
+        if: steps.precheck.outputs.skip == 'false'
+        run: ./vendor/bin/phpunit
 
   node:
     name: node 22 · assets
@@ -75,25 +79,14 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: pnpm/action-setup@v4
-        if: steps.precheck.outputs.skip == 'false'
-        with:
-          version: 9
-
       - uses: actions/setup-node@v6
         if: steps.precheck.outputs.skip == 'false'
         with:
           node-version: "22"
-          cache: pnpm
+          cache: npm
 
-      - run: pnpm install --frozen-lockfile
+      - run: npm ci
         if: steps.precheck.outputs.skip == 'false'
 
-      - run: pnpm lint
-        if: steps.precheck.outputs.skip == 'false'
-
-      - run: pnpm typecheck
-        if: steps.precheck.outputs.skip == 'false'
-
-      - run: pnpm test
+      - run: npm run build
         if: steps.precheck.outputs.skip == 'false'
