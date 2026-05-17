@@ -5,13 +5,20 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
+/**
+ * @property string|null $tenant_id
+ * @property string|null $oauth_subject
+ * @property string $role  owner|admin|editor|viewer
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -19,10 +26,19 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'tenant_id',
         'name',
         'email',
         'password',
+        'oauth_subject',
+        'role',
     ];
+
+    /** @return BelongsTo<Tenant, $this> */
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
