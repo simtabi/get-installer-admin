@@ -59,6 +59,10 @@ jobs:
         if: steps.precheck.outputs.skip == 'false'
         run: php artisan key:generate
 
+      - name: Passport keys
+        if: steps.precheck.outputs.skip == 'false'
+        run: php artisan passport:keys --force
+
       - name: PHPUnit (tests)
         if: steps.precheck.outputs.skip == 'false'
         run: ./vendor/bin/phpunit
