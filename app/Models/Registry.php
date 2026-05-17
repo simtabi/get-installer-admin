@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $tenant_id
  * @property string $name
- * @property int    $schema_version
+ * @property int $schema_version
  * @property array<string,mixed> $body
  */
 class Registry extends Model

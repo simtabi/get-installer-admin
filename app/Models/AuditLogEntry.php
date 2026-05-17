@@ -13,14 +13,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * created / updated / deleted (observer lives in
  * App\Observers\AuditLogObserver, registered in AppServiceProvider).
  *
- * @property string                    $id
- * @property string                    $tenant_id
- * @property int|null                  $user_id
- * @property string                    $action       create|update|delete
- * @property string                    $target_type
- * @property string                    $target_id
- * @property array<string,mixed>|null  $before
- * @property array<string,mixed>|null  $after
+ * @property string $id
+ * @property string $tenant_id
+ * @property int|null $user_id
+ * @property string $action create|update|delete
+ * @property string $target_type
+ * @property string $target_id
+ * @property array<string,mixed>|null $before
+ * @property array<string,mixed>|null $after
  */
 class AuditLogEntry extends Model
 {

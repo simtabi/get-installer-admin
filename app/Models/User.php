@@ -13,7 +13,7 @@ use Laravel\Passport\HasApiTokens;
 /**
  * @property string|null $tenant_id
  * @property string|null $oauth_subject
- * @property string $role  owner|admin|editor|viewer
+ * @property string $role owner|admin|editor|viewer
  */
 class User extends Authenticatable
 {
