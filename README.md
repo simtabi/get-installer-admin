@@ -1,12 +1,13 @@
 # get-installer-admin
 
 Web admin for [`get-installer`](https://github.com/simtabi/get-installer)
-registries. Laravel 13 + Inertia + React + REST API + OAuth.
+registries. Laravel 12 + Inertia + React + REST API + OAuth.
 
-> **Status: pre-implementation.** This repo holds the design docs,
-> CI scaffolding, and bootstrap instructions. The Laravel install
-> itself lives in [`INITIALIZE.md`](INITIALIZE.md) — run that when
-> you're ready to start.
+> **Status: Laravel bootstrap landed.** PHP skeleton + PHPUnit +
+> Vite are installed and committed; CI is green on PHP 8.3 + 8.4 ×
+> Linux + macOS. Remaining steps in [`INITIALIZE.md`](INITIALIZE.md)
+> (Passport, Inertia + React, multi-tenancy, OpenAPI validator
+> wiring, Pest swap) run from this baseline.
 
 ## What this repo is for
 
@@ -41,10 +42,13 @@ upstream sibling repo:
 
 | | |
 |---|---|
-| Bootstrap | not yet run — see INITIALIZE.md |
-| API spec | placeholder at `docs/api/v1.yaml` |
-| Tests | composer create-project ships Pest by default |
-| CI | matrix on PHP 8.3 + 8.4, Node 22 |
+| Bootstrap | ✓ Laravel 12 + Vite skeleton landed (`059a60d`) |
+| Tests | PHPUnit (Laravel 12 default); Pest swap is INITIALIZE.md step 6 |
+| Passport / OAuth | pending (INITIALIZE.md step 2) |
+| Inertia + React | pending (INITIALIZE.md step 3) |
+| Multi-tenancy | pending (INITIALIZE.md step 4) |
+| API spec | placeholder at `docs/api/v1.yaml` (no controllers yet) |
+| CI | ✓ PHP 8.3 + 8.4 × Linux + macOS, Node 22 |
 | Trusted publishers | N/A (Laravel app, not a package) |
 
 ## License
