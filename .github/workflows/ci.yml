@@ -23,7 +23,7 @@ jobs:
         php: ["8.3", "8.4"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Skip if bootstrap not run
         id: precheck
@@ -71,7 +71,7 @@ jobs:
     name: node 22 · assets
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Skip if bootstrap not run
         id: precheck
