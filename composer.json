@@ -1,6 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "simtabi/get-installer-admin",
+    "homepage": "https://opensource.simtabi.com/products/simtabi/get-installer-admin",
     "type": "project",
     "description": "Web admin for get-installer registries — Laravel 12 + Inertia + React + REST API + OAuth. Sibling repo to simtabi/get-installer.",
     "keywords": ["laravel", "admin", "multi-tenant", "get-installer", "simtabi"],
@@ -15,7 +16,7 @@
     "support": {
         "issues": "https://github.com/simtabi/get-installer-admin/issues",
         "source": "https://github.com/simtabi/get-installer-admin",
-        "docs": "https://opensource.simtabi.com/documentation/get-installer-admin"
+        "docs": "https://opensource.simtabi.com/documentation/simtabi/get-installer-admin/"
     },
     "require": {
         "php": "^8.2",
