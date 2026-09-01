@@ -8,7 +8,7 @@ demonstrated impact.
 
 ## Reporting a vulnerability
 
-Email `opensource@simtabi.com`. Include:
+Email `security@simtabi.com`. Include:
 
 - A description of the issue + reproduction steps.
 - The version (commit SHA if pre-tag) you observed it on.
