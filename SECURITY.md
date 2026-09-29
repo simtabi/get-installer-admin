@@ -10,7 +10,7 @@ demonstrated impact.
 
 The preferred channel is GitHub private vulnerability reporting: open a private report at <https://github.com/simtabi/get-installer-admin/security/advisories/new>. The report stays attached to the repository, with a draft advisory and a CVE request path. Email **security@simtabi.com** if you do not use GitHub.
 
-Email `security@simtabi.com`. Include:
+Include:
 
 - A description of the issue + reproduction steps.
 - The version (commit SHA if pre-tag) you observed it on.
