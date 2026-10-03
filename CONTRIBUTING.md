@@ -1,5 +1,7 @@
 # Contributing to get-installer-admin
 
+Where this file is silent, the [Simtabi contributing guide](https://github.com/simtabi/.github/blob/HEAD/CONTRIBUTING.md) applies.
+
 ## Before you start
 
 1. Read [`README.md`](README.md) and the design doc at
