@@ -1,5 +1,7 @@
 # Security Policy
 
+Where this file is silent, the [Simtabi security policy](https://github.com/simtabi/.github/blob/HEAD/SECURITY.md) applies.
+
 ## Supported versions
 
 `get-installer-admin` is pre-1.0. The latest tag is the only
