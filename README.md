@@ -38,6 +38,36 @@ upstream sibling repo:
 4. Read `docs/api/v1.yaml` (OpenAPI 3.1 spec) for the contract
    surface; controllers conform to it.
 
+## Quick start guide and usage
+
+### Getting started
+
+On a checkout where the Laravel skeleton has landed, one Composer
+script does the first-run setup: it installs PHP dependencies,
+copies `.env.example` to `.env`, generates the app key, runs the
+migrations, then installs and builds the frontend.
+
+```bash
+composer run setup
+```
+
+### Usage
+
+Run the app server, queue worker, log tail and Vite together:
+
+```bash
+composer run dev
+```
+
+Run the test suite:
+
+```bash
+composer test
+```
+
+The remaining bootstrap steps (Passport, Inertia + React,
+multi-tenancy) are in [`INITIALIZE.md`](INITIALIZE.md).
+
 ## Status
 
 | | |
