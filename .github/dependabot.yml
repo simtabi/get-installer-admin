@@ -13,6 +13,10 @@ updates:
     labels:
       - dependencies
       - php
+    groups:
+      composer-minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
 
   - package-ecosystem: npm
     directory: "/"
@@ -27,6 +31,10 @@ updates:
     labels:
       - dependencies
       - javascript
+    groups:
+      npm-minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
 
   - package-ecosystem: github-actions
     directory: "/"
@@ -41,3 +49,7 @@ updates:
     labels:
       - dependencies
       - github-actions
+    groups:
+      github-actions-minor-and-patch:
+        patterns: ["*"]
+        update-types: [minor, patch]
